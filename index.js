@@ -1,6 +1,7 @@
 const express = require('express');
 const bodyparser = require('body-parser')
 const {writeToExcel} = require('./excel/excel')
+const {lineNotify} = require('./Line notify/line')
 const app = express();
 const port = 8083;
 
@@ -35,9 +36,25 @@ app.post('/rut955',async (req, res) => {
 });
 
 app.post('/test',(req,res)=>{
-  console.log(req.body)
+  console.log(req.body.object)
 })
 
+app.post('/line',async (req,res)=>{
+  try{
+    const a = req.body.a
+    if (a<=10){
+      const message = 'a less than 10'
+      await lineNotify(message)
+    }else{
+      const message = 'a more than 10'
+      await lineNotify(message)
+    }
+    res.json({status:"Complete"})
+  }catch(error){
+    console.error(error.message)
+    res.json({status:error.message})
+  }
+})
 
 // Start the server
 app.listen(port, () => {
